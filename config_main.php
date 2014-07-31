@@ -7,7 +7,7 @@ if (!isset($site_root)) {
 $fc = 40;
 
 // code which uses $rootdir_data assumes it has a terminal slash:
-$rootdir_data = $site_root . '/';
+$rootdir_data = '/export/home/zpm/webtest.cv.nrao.edu/active/php/ntc/ws-atb/';
 
 // the beameff_64 application is deployed to a fixed location in the code:
 $beameff_64 = $rootdir_data . "FEConfig/bp/beameff/beameff_64";
@@ -27,7 +27,7 @@ switch ($site_hostname){
         break;
 
     case "webtest.cv.nrao.edu":
-        $rootdir_url = "http://webtest.cv.nrao.edu/php/ntc/ws-mtm/";
+        $rootdir_url = "http://webtest.cv.nrao.edu/php/ntc/ws-atb/";
         $GNUplot = $GNUPLOT = '/usr/bin/gnuplot';
         break;
 
@@ -60,7 +60,7 @@ $log_write_directory = $main_write_directory . "logs/";
 $log_url_directory = $main_url_directory . "logs/";
 
 $cca_write_directory = $rootdir_data . "test_datafiles/";
-$cca_url_directory = $rootdir_url    . "cca_datafiles/";
+$cca_url_directory = $rootdir_url    . "test_datafiles/";
 
 $wca_write_directory = $rootdir_data . "test_datafiles/";
 $wca_url_directory   = $rootdir_url  . "test_datafiles/";

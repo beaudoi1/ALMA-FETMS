@@ -33,6 +33,12 @@ $ifs->Initialize_IFSpectrum($FEid,$DataSetGroup,$fc,$band);
 
 echo "<div style='background-color:#6C7070;width:1000px;'>";
 
+$feconfig = $ifs->FrontEnd->feconfig_latest;
+
+$dbpull = new IF_db();
+$temp = $dbpull->qtdh($DataSetGroup, $band, $FEid, TRUE);
+$TS = $temp[1];
+
 switch($tabtype){
     case 1:
         //Info tab was selected
@@ -43,7 +49,7 @@ switch($tabtype){
         //Spurious Noise tab was selected, IF0 subtab was selected.
         echo "<div style='height:750px'>";
         if (isset($ifs -> urls[0]))
-            echo "<img src='" . $ifs->urls[0]->GetValue('spurious_url2d'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious IF0.png'>";
         echo "</div>";
         break;
 
@@ -51,7 +57,7 @@ switch($tabtype){
         //Spurious Noise tab was selected, IF1 subtab was selected.
         echo "<div style='height:750px'>";
         if (isset($ifs -> urls[1]))
-            echo "<img src='" . $ifs->urls[1]->GetValue('spurious_url2d'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious IF1.png'>";
         echo "</div>";
         break;
 
@@ -59,7 +65,7 @@ switch($tabtype){
         //Spurious Noise tab was selected, IF2 subtab was selected.
         echo "<div style='height:750px'>";
         if (isset($ifs->urls[2]))
-            echo "<img src='" . $ifs->urls[2]->GetValue('spurious_url2d'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious IF2.png'>";
         echo "</div>";
         break;
 
@@ -67,7 +73,7 @@ switch($tabtype){
         //Spurious Noise tab was selected, IF3 subtab was selected.
         echo "<div style='height:750px'>";
         if (isset($ifs->urls[3]))
-            echo "<img src='" . $ifs->urls[3]->GetValue('spurious_url2d'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious IF3.png'>";
         echo "</div>";
         break;
 
@@ -75,7 +81,7 @@ switch($tabtype){
         //Spurious Noise (Expanded Plots) tab was selected, IF0 subtab was selected.
         echo "<div>";
         if (isset($ifs -> urls[0]))
-            echo "<img src='" . $ifs->urls[0]->GetValue('spurious_url2d2'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious Expanded IF0.png'>";
         echo "</div>";
         break;
 
@@ -83,7 +89,7 @@ switch($tabtype){
         //Spurious Noise (Expanded Plots) tab was selected, IF1 subtab was selected.
         echo "<div>";
         if (isset($ifs -> urls[1]))
-            echo "<img src='" . $ifs->urls[1]->GetValue('spurious_url2d2'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious Expanded IF1.png'>";
         echo "</div>";
         break;
 
@@ -91,7 +97,7 @@ switch($tabtype){
         //Spurious Noise (Expanded Plots) tab was selected, IF2 subtab was selected.
         echo "<div>";
         if (isset($ifs->urls[2]))
-            echo "<img src='" . $ifs->urls[2]->GetValue('spurious_url2d2'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious Expanded IF2.png'>";
         echo "</div>";
         break;
 
@@ -99,7 +105,7 @@ switch($tabtype){
         //Spurious Noise (Expanded Plots) tab was selected, IF3 subtab was selected.
         echo "<div>";
         if (isset($ifs->urls[3]))
-            echo "<img src='" . $ifs->urls[3]->GetValue('spurious_url2d2'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/Band$band Spurious Expanded IF3.png'>";
         echo "</div>";
         break;
 
@@ -107,7 +113,7 @@ switch($tabtype){
         //Power Variation (2 GHz) tab was selected, IF0 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[0]))
-            echo "<img src='" . $ifs->urls[0]->GetValue('powervar_2GHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_2 GHz_IF0.png'>";
         echo "</div>";
         break;
 
@@ -115,7 +121,7 @@ switch($tabtype){
         //Power Variation (2 GHz) tab was selected, IF1 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[1]))
-            echo "<img src='" . $ifs->urls[1]->GetValue('powervar_2GHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_2 GHz_IF1.png'>";
         echo "</div>";
         break;
 
@@ -123,7 +129,7 @@ switch($tabtype){
         //Power Variation (2 GHz) tab was selected, IF2 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[2]))
-            echo "<img src='" . $ifs->urls[2]->GetValue('powervar_2GHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_2 GHz_IF2.png'>";
         echo "</div>";
         break;
 
@@ -131,7 +137,7 @@ switch($tabtype){
         //Power Variation (2 GHz) tab was selected, IF3 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[3]))
-            echo "<img src='" . $ifs->urls[3]->GetValue('powervar_2GHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_2 GHz_IF3.png'>";
         echo "</div>";
         break;
 
@@ -139,7 +145,7 @@ switch($tabtype){
         //Power Variation (31 MHz) tab was selected, IF0 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[0]))
-            echo "<img src='" . $ifs->urls[0]->GetValue('powervar_31MHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_31 MHz_IF0.png'>";
         echo "</div>";
         break;
 
@@ -147,7 +153,7 @@ switch($tabtype){
         //Power Variation (31 MHz) tab was selected, IF1 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[1]))
-            echo "<img src='" . $ifs->urls[1]->GetValue('powervar_31MHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_31 MHz_IF1.png'>";
         echo "</div>";
         break;
 
@@ -155,7 +161,7 @@ switch($tabtype){
         //Power Variation (31 MHz) tab was selected, IF2 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[2]))
-            echo "<img src='" . $ifs->urls[2]->GetValue('powervar_31MHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_31 MHz_IF2.png'>";
         echo "</div>";
         break;
 
@@ -163,42 +169,55 @@ switch($tabtype){
         //Power Variation (31 MHz) tab was selected, IF3 subtab was selected.
         echo "<div style='height:750px'><br><br>";
         if (isset($ifs->urls[3]))
-            echo "<img src='" . $ifs->urls[3]->GetValue('powervar_31MHz_url'). "'>";
+            echo "<img src='http://webtest.cv.nrao.edu/php/ntc/ws-atb/test_datafiles/IFSpectrumLibrary/PowerVarBand$band" . "_31 MHz_IF3.png'>";
         echo "</div>";
         break;
 
     case 'totpwr_0':
         //Total Power tab was selected, IF0 subtab was selected.
         echo "<div style='height:750px'><br><br>";
-        $ifs->Display_TotalPowerTable(0);
+      	$plt = new plotter();
+		$plt->setParams(NULL, 'IFSpectrumLibrary', $band);
+		$plt->powerTotTables($DataSetGroup, $FEid, 0, $feconfig, $TS);
         echo "<br><br><br></div>";
         break;
 
     case 'totpwr_1':
         //Total Power tab was selected, IF1 subtab was selected.
         echo "<div style='height:750px'><br><br>";
-        $ifs->Display_TotalPowerTable(1);
+        $plt = new plotter();
+		$plt->setParams(NULL, 'IFSpectrumLibrary', $band);
+		$plt->powerTotTables($DataSetGroup, $FEid, 1, $feconfig, $TS);
         echo "<br><br><br></div>";
         break;
 
     case 'totpwr_2':
         //Total Power tab was selected, IF2 subtab was selected.
         echo "<div style='height:750px'><br><br>";
-        $ifs->Display_TotalPowerTable(2);
+        //$ifs->Display_TotalPowerTable(2);
+        $plt = new plotter();
+        $plt->setParams(NULL, 'IFSpectrumLibrary', $band);
+        $plt->powerTotTables($DataSetGroup, $FEid, 2, $feconfig, $TS);
         echo "<br><br><br></div>";
         break;
 
     case 'totpwr_3':
         //Total Power tab was selected, IF3 subtab was selected.
         echo "<div style='height:750px'><br><br>";
-        $ifs->Display_TotalPowerTable(3);
+        //$ifs->Display_TotalPowerTable(3);
+        $plt = new plotter();
+        $plt->setParams(NULL, 'IFSpectrumLibrary', $band);
+        $plt->powerTotTables($DataSetGroup, $FEid, 3, $feconfig, $TS);
         echo "<br><br><br></div>";
         break;
 
     case 'pwrvarfullband':
         //Power Variation Full Band tab was selected
         echo "<div style='height:750px'><br><br><br><br>";
-        $ifs->DisplayPowerVarFullBandTable();
+        $plt = new plotter();
+        $plt->setParams(NULL, 'IFSpectrumLibrary', $band);
+        $plt->powerVarTables($DataSetGroup, $FEid, $feconfig, $TS);
+        //$ifs->DisplayPowerVarFullBandTable();
         echo "<br><br><br></div>";
         break;
 

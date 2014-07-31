@@ -1,10 +1,42 @@
 <?php
+/**
+ * ALMA - Atacama Large Millimeter Array
+ * (c) Associated Universities Inc., 2006
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+ *
+ * @author Aaron Beaudoin
+ * Version 1.0 (07/30/2014)
+ *
+ *
+ * Example code can be found in /test/class.test.php
+ *
+ */
+
 require_once(dirname(__FILE__) . '/../SiteConfig.php');
 require_once($site_NT . '/noisetempcalc.php');
 require_once($site_IF . '/IFCalc.php');
 require_once($site_root . '/test/Library/plotter.php');
 
-function spuriousNoise($band) {
+/**
+ * Creates spurious noise plots
+ * 
+ * @param int $band
+ * @param int $if
+ */
+function spuriousNoise($band, $if) {
 	require(site_get_config_main());
 	$IF = new IFCalc();
 	$plt = new plotter();
@@ -17,42 +49,48 @@ function spuriousNoise($band) {
 		$dsg = 2;
 	}
 
-	for ($if=0; $if<=3; $if++) {
-		$IF->setParams($band, $if, $feid, $dsg);
-		$IF->deleteTables();
-		$IF->createTables();
-		$IF->getSpuriousData();
-		$IF->deleteTables();
+	$IF->setParams($band, $if, $feid, $dsg);
+	$IF->deleteTables();
+	$IF->createTables();
+	$IF->getSpuriousData();
+	$IF->deleteTables();
 
-		$plt->setParams($IF->data, 'IFSpectrumLibrary', $band);
-		$plt->findLOs();
-		$plt->getSpuriousNoise();
-		$plt->plotSize(900, 600);
-		$plotOut = "Band$band Spurious IF$if";
-		$plt->plotOutput($plotOut);
-		$plt->plotTitle('Spurious Noise, FE-61, Band ' . $band . "SN 61 IF$if");
-		$plt->plotGrid();
-		$plt->plotKey(FALSE);
-		$plt->plotBMargin(7);
-		$y2tics = array();
-		$att = array();
-		$count = 1;
-		foreach ($plt->LO as $L) {
-			$y2tics[$L] = $plt->spurVal[$L];
-			$att[] = "lines lt $count title '" . $L . " GHz'";
-			$count++;
-		}
-		$plt->plotYTics(array('ytics' => FALSE, 'y2tics' => $y2tics));
-		$plt->plotLabels(array('x' => 'IF (GHz)', 'y' => 'Power (dB)'));
-		$plt->plotArrows();
-		$plt->plotData($att, count($att));
-		$plt->setPlotter($plt->genPlotCode());
-		system("$GNUPLOT $plt->plotter");
-		
-		echo "$plotOut <br>";
+	$plt->setParams($IF->data, 'IFSpectrumLibrary', $band);
+	$saveas = "SpuriousNoiseBand$band" . "_IF$if";
+	$plt->save_data($saveas);
+	$plt->findLOs();
+	$plt->getSpuriousNoise();
+	$plt->plotSize(900, 600);
+	$plotOut = "Band$band Spurious IF$if";
+	$plt->plotOutput($plotOut);
+	$plt->plotTitle('Spurious Noise, FE-61, Band ' . $band . "SN 61 IF$if");
+	$plt->plotGrid();
+	$plt->plotKey(FALSE);
+	$plt->plotBMargin(7);
+	$y2tics = array();
+	$att = array();
+	$count = 1;
+	foreach ($plt->LO as $L) {
+		$y2tics[$L] = $plt->spurVal[$L];
+		$att[] = "lines lt $count title '" . $L . " GHz'";
+		$count++;
 	}
+	$plt->plotYTics(array('ytics' => FALSE, 'y2tics' => $y2tics));
+	$plt->plotLabels(array('x' => 'IF (GHz)', 'y' => 'Power (dB)'));
+	$plt->plotArrows();
+	$plt->plotData($att, count($att));
+	$plt->setPlotter($plt->genPlotCode());
+	system("$GNUPLOT $plt->plotter");
+	
+	echo "$plotOut <br>";
+	//}
 }
 
+/**
+ * Creates spurious noise expanded data for every IF
+ * 
+ * @param int $band
+ */
 function spuriousExpanded($band) {
 	require(site_get_config_main());
 	$IF = new IFCalc();
@@ -104,6 +142,11 @@ function spuriousExpanded($band) {
 	}
 }
 
+/**
+ * Creates corrected noise temperature vs. LO plots
+ * 
+ * @param int $band
+ */
 function noiseTempRF($band) {
 	require(site_get_config_main());
 	$NT = new NTCalc();
@@ -166,6 +209,11 @@ function noiseTempRF($band) {
 	}		
 }
 
+/**
+ * Creates corrected noise temperature vs. IF plots
+ * 
+ * @param int $band
+ */
 function noiseTempIF($band) {
 	$NT = new NTCalc();
 	$plt = new plotter();
@@ -223,6 +271,11 @@ function noiseTempIF($band) {
 	echo "$saveas <br>";
 }
 
+/**
+ * Creates average corrected noise temperature vs. LO plots
+ * 
+ * @param int $band
+ */
 function noiseTempRFAvg($band) {
 	$NT = new NTCalc();
 	$plt = new plotter();
@@ -281,86 +334,130 @@ function noiseTempRFAvg($band) {
 	echo "$saveas <br>";
 }
 
-$band = 3;
-//spuriousNoise($band);
-//spuriousExpanded($band);
-noiseTempRF($band);
-noiseTempIF($band);
-noiseTempRFAvg($band);
-/*
-require(site_get_config_main());
+/**
+ * Creates power variation window plots for 2GHz window and 31 MHz window for a single IF.
+ * 
+ * @param int $Band
+ * @param int $IFChannel
+ * @param int $FEid
+ * @param int $DataSetGroup
+ * @param int $if
+ */
+function powerVar($band, $IFChannel, $FEid, $DataSetGroup) {
+	$labels = array();
+	$dbpull = new IF_db();
+	$temp = $dbpull->qtdh($DataSetGroup, $band, $FEid, TRUE);
+	$keys = $temp[0];
+	$TS = $temp[1];
+	$temp = "TestData_header.keyId: $keys[0]";
+	for ($i=1; $i<count($keys); $i++) {
+		$temp .= ", $keys[$i]";
+	}
+	$labels[] = $temp;
+	
+	$temp = "$TS, FE Configuration ###; TestData_header.DataSetGroup: $DataSetGroup; IFSpectrum Ver. $IF->version";
+	$labels[] = $temp;
+	require(site_get_config_main());
+	$IF = new IFCalc();
+	$IF->setParams($band, $IFChannel, $FEid, $DataSetGroup);
+	/*$IF->deleteTables();
+	$IF->createTables();
+	$IF->getPowerData(31 * pow(10, 6));//*/
+	
+	$plt = new plotter();
+	$plt->setParams(NULL, 'IFSpectrumLibrary', $band);
+	$if = $IFChannel;
+	
+	$fwin = 2 * pow(10, 9); // Window size
+	$win = "2 GHz";
+	$trueSpec = $plt->specs['spec_value']; //Resets spec value to original value
+	
+	// Sets ymax limit
+	if ($band == 6){
+		$ymax = 9;
+	} else {
+		$ymax = $plt->specs['spec_value'] + 1;
+	}
+	
+	//$IF->data = array();
+	//$IF->getPowerData($fwin); // Gets power variation from database for 2 GHz window
+	//$plt->data = $IF->data;
+	$plt->data = $plt->loadData("PowerVarBand$band" . "_$win" . "_IF$if");
+	//$plt->save_data("PowerVarBand$band" . "_$win" . "_IF$if");
+	
+	$plt->findLOs(); //Finds LO frequencies over band.
+	$plt->getPowerVar(); // Creates temporary files for power variation over 2 GHz window plots
+	$plt->plotSize(900, 600);
+	$saveas = "PowerVarBand$band" . "_$win" . "_IF$if";
+	$plt->plotOutput($saveas);
+	$plt->plotTitle("Power Variation $win Window: FE-61, Band $band SN 61, IF$if");
+	$plt->plotGrid();
+	$plt->createSpecsFile('Freq_Hz', array('spec_value'), array("lines lt -1 lw 5 title 'Spec'"), FALSE);
+	$plt->plotLabels(array('x' => 'Center of Window (GHz)', 'y' => 'Power Variation in Window (dB)'));
+	$plt->plotBMargin(7);
+	$plt->plotKey('outside');
+	$plt->plotYAxis(array('ymin' => 0, 'ymax' => $ymax));
+	$att = array();
+	$count = 1;
+	foreach ($plt->LO as $L) {
+		$att[] = "lines lt $count title '$L GHz'";
+		$count++;
+	}
+	if ($band == 6) { // Band 6 case
+		$plt->plotAddLabel($labels, array(array(0.01, 0.01), array(0.01, 0.04)));
+		$plt->band6powervar($if, $FEid, $DataSetGroup, $att, count($att));
+	} else {
+		$temp = "Max Power Variation: $IF->maxvar dB";
+		$labels[] = $temp;
+		$plt->plotAddLabel($labels, array(array(0.01, 0.01), array(0.01, 0.04), array(0.01, 0.07)));
+		$plt->plotData($att, count($att));
+	}
+	$plt->setPlotter($plt->genPlotCode());
+	system("$GNUPLOT $plt->plotter");
+	
+	$plt->resetPlotter();
+	
+	$fwin = 31 * pow(10, 6); // Sets window size to 31 MHz
+	$win = "31 MHz";
+	//$IF->data = array();
+	//$IF->getPowerData($fwin); // Gets power variation data for 31 MHz window from database
+	
+	//$plt->data = $IF->data;
+	$plt->data = $plt->loadData("PowerVarBand$band" . "_$win" . "_IF$if");
+	//$plt->save_data("PowerVarBand$band" . "_$win" . "_IF$if");
+	
+	$plt->getPowerVar();
+	$plt->plotSize(900, 600);
+	$saveas = "PowerVarBand$band" . "_$win" . "_IF$if";
+	$plt->plotOutput($saveas);
+	$plt->plotTitle("Power Variation $win Window: FE-61, Band $band SN 61, IF$if");
+	$plt->plotGrid();
+	$plt->specs['spec_value'] = 1.35;
+	$ymax = $plt->specs['spec_value'] + 1;
+	$plt->createSpecsFile('Freq_Hz', array('spec_value'), array("lines lt -1 lw 5 title 'Spec'"), FALSE);
+	$plt->plotLabels(array('x' => 'Center of Window (GHz)', 'y' => 'Power Variation in Window (dB)'));
+	$plt->plotBMargin(7);
+	$plt->plotKey('outside');
+	$plt->plotYAxis(array('ymin' => 0, 'ymax' => $ymax));
+	$att = array();
+	$count = 1;
+	foreach ($plt->LO as $L) {
+		$att[] = "lines lt $count title '$L GHz'";
+		$count++;
+	}
+	$plt->plotData($att, count($att));
+	$plt->setPlotter($plt->genPlotCode());
+	system("$GNUPLOT $plt->plotter");
+	
+	$plt->resetPlotter();
+	$plt->specs['spec_value'] = $trueSpec;
+}
 
-$IF = new IFCalc();
 $band = 6;
-if ($band == 3) {
-	$dsg = 0;
-	$keyId = 256;
+$FEid = 87;
+$DataSetGroup = 2;
+for ($if=0; $if<=3; $if++) {
+	powerVar($band, $if, $FEid, $DataSetGroup);
 }
-if ($band == 6) {
-	$dsg = 2;
-	$keyId = 258;
-}
-$ifchannel = 0;
-$feid = 87;
-$fc = 40;
-$sn = 60;
-
-//$fwin = 31 * pow(10,6);
-$fwin = 2 * pow(10,9);
-//$win = "31 MHz";
-$win = "2 GHz";
-
-/*
-$IF->setParams($band, $ifchannel, $feid, $dsg);
-$IF->deleteTables();
-$IF->createTables();
-//$IF->getSpuriousData();
-$IF->getPowerData($fwin);
-$IF->deleteTables();
-
-$plt = new plotter();
-$plt->setParams(NULL, 'IFSpectrumLibrary', $band);
-$plt->powerTables($dsg, $feid);
-//$plt->save_data("PowerVarBand" . $band . "_" . $win . "_IF$ifchannel");
-//$plt->data = $plt->loadData("PowerVarBand" . $band . "_" . $win . "_IF$ifchannel");
-//echo "<table border = '1'>";
-//$plt->print_data();
-//echo "</table>";
-//$plt->save_data("NTDataBand$band");
-
-/*
-$plt->findLOs();
-$plt->getPowerVar();
-
-$plt->plotSize(900, 600);
-$plt->plotOutput("PowerVarBand$band" . "_$win" . "_IF$ifchannel");
-$plt->plotTitle("Power Variation $win Window: FE-61, Band $band SN 60, IF$ifchannel");
-$plt->plotGrid();
-$plt->plotKey('outside');
-$plt->plotBMargin(7);
-//$plt->specs['spec_value'] = 1.35; //Set for 31 MHz window
-//$plt->createSpecsFile('Freq_Hz', array('spec_value'), array("lines lt -1 lw 5 title 'Spec'"), FALSE);
-$plt->plotLabels(array('x' => 'Center of Window (GHz)', 'y' => 'Power Variation in Window (dB)'));
-$plt->plotYAxis(array('ymin' => 0, 'ymax' => 7));
-
-$count = 1;
-$att = array();
-foreach ($plt->LO as $L) {
-	$att[] = "lines lt $count title '" . $L . " GHz'";
-	$count++;
-}
-
-$plt->band6powervar($ifchannel, $feid, $dsg, $att, count($att));
-
-$keys = array_keys($plt->plotAtt);
-foreach ($keys as $k) {
-	echo "$k: " . $plt->plotAtt[$k] . "<br>";
-}
-
-$plt->setPlotter($plt->genPlotCode());
-system("$GNUPLOT $plt->plotter");
-//*/
-//$plt->print_data();
-
 
 ?>

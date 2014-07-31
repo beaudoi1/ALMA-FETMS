@@ -2,9 +2,11 @@
 
 date_default_timezone_set ('America/New_York');
 ini_set('display_errors', '1');
+
 $errorReportSettingsNo_E_NOTICE = E_ERROR | E_WARNING | E_PARSE;
 $errorReportSettingsNormal = $errorReportSettingsNo_E_NOTICE | E_NOTICE;
 error_reporting($errorReportSettingsNormal);
+
 set_time_limit(1800);     // ridiculously long = 30 minutes!
 
 // site_root defaults to the server's document root, but that won't work on any NRAO servers:
@@ -15,6 +17,8 @@ $site_FEConfig = $site_root . "/FEConfig";
 $site_config_main = $site_root . "/config_main.php";
 $site_dbConnect = $site_root . "/dbConnect/dbConnect.php";
 $site_dBcode = $site_root . "/dBcode";
+$site_NT = $site_root . "/test/Library/NoiseTempLibrary";
+$site_IF = $site_root . "/test/Library/IFSpectrumLibrary";
 
 // function to get the path to the classes directory:
 function site_get_classes() {
@@ -26,6 +30,11 @@ function site_get_classes() {
 function site_get_config_main() {
     global $site_config_main;
     return $site_config_main;
+}
+
+function site_get_NT() {
+	global $site_NT;
+	return $site_NT;
 }
 
 ?>
